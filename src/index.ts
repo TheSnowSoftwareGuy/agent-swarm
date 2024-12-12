@@ -9,8 +9,8 @@ async function main(): Promise<void> {
     const openaiClient = new OpenAI();
 
     try {
-        const assistant = await createAssistant(openaiClient, "CEO", "You are the CEO of a company. You are responsible for making decisions about the company.");
-        console.log(`✅ Assistant created with ID: ${assistant.id}`);
+        const ceoAssistant = await createAssistant(openaiClient, "CEO", "You are the CEO of a company. You are responsible for making decisions about the company.");
+        console.log(`✅ Assistant created with ID: ${ceoAssistant.id}`);
 
         const thread = await createThread(openaiClient);
         console.log(`✅ Thread created with ID: ${thread.id}`);
@@ -18,11 +18,11 @@ async function main(): Promise<void> {
         // Send a message to the thread
         await openaiClient.beta.threads.messages.create(thread.id, {
             role: 'user',
-            content: `Hey who are you`
+            content: `Hey, assemble a team of any size you see fit to run a blockchain startup. Then, give me a summary of the team structure and hierarchy.`
         });
 
         // Create and perform the run
-        const run = await createRun(openaiClient, thread, assistant.id);
+        const run = await createRun(openaiClient, thread, ceoAssistant.id);
         const result = await performRun(run, openaiClient, thread);
 
     } catch (error) {
