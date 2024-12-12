@@ -6,7 +6,8 @@ export async function createRun(client: OpenAI, thread: Thread, assistantId: str
     console.log(`🎬 Creating run for thread ${thread.id} with assistant ${assistantId}`);
 
     let run = await client.beta.threads.runs.create(thread.id, {
-        assistant_id: assistantId
+        assistant_id: assistantId,
+        additional_instructions: `Your assistantId is ${assistantId}.`
     });
 
     console.log(`⏳ Run ${run.id} created, waiting for completion...`);

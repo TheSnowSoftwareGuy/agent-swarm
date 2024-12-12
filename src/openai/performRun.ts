@@ -39,9 +39,9 @@ export async function performRun(run: Run, client: OpenAI, thread: Thread) {
     }
 
     if (assistantMessage.content[0].type === 'text') {
-        console.log('🤖 Assistant response:', assistantMessage.content[0].text.value);
+        // console.log('🤖 Assistant response:', assistantMessage.content[0].text.value);
     } else {
-        console.log('📎 Assistant response type:', assistantMessage.content[0].type);
+        // console.log('📎 Assisstant response type:', assistantMessage.content[0].type);
     }
 
     return assistantMessage.content[0] ||

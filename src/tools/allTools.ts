@@ -1,4 +1,6 @@
 import { createAgentTool } from './createAgentTool.js';
+import { getTeamTool } from './getTeamTool.js';
+import { sendMessageTool } from "./sendMessageTool.js";
 
 export interface ToolConfig<T = any> {
     definition: {
@@ -17,5 +19,7 @@ export interface ToolConfig<T = any> {
 }
 
 export const tools: Record<string, ToolConfig> = {
-    create_agent: createAgentTool
+    create_agent: createAgentTool,
+    send_message_to_agent: sendMessageTool,
+    get_team_structure: getTeamTool
 };

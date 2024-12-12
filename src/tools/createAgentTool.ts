@@ -4,6 +4,7 @@ import { createAssistant } from "../openai/createAssistant.js";
 import { createThread } from "../openai/createThread.js";
 import { createRun } from "../openai/createRun.js";
 import { performRun } from "../openai/performRun.js";
+import { agents } from "../index.js";
 
 // Singleton OpenAI client instance
 const openaiClient = new OpenAI();
@@ -12,6 +13,7 @@ interface CreateAgentArgs {
     agentName: string;
     systemPrompt: string;
     initialMessage: string;
+    assistantId: string;
 }
 
 export const createAgentTool: ToolConfig<CreateAgentArgs> = {
@@ -34,9 +36,13 @@ export const createAgentTool: ToolConfig<CreateAgentArgs> = {
                     initialMessage: {
                         type: "string",
                         description: "The first message/task to send to the newly created agent"
+                    },
+                    assistantId: {
+                        type: "string",
+                        description: "The OpenAI Assistant ID of the manager (use your own assistant.id, not your name)"
                     }
                 },
-                required: ["agentName", "systemPrompt", "initialMessage"]
+                required: ["agentName", "systemPrompt", "initialMessage", "assistantId"]
             }
         }
     },
@@ -58,6 +64,24 @@ export const createAgentTool: ToolConfig<CreateAgentArgs> = {
             // Create and perform the initial run
             const run = await createRun(openaiClient, thread, assistant.id);
             const result = await performRun(run, openaiClient, thread);
+
+            // Store the new agent in our in-memory store
+            agents[args.agentName] = {
+                assistant: assistant,
+                thread: thread,
+                metadata: {
+                    managerAssistantId: args.assistantId,
+                    subordinateAssistantIds: [],
+                }
+            };
+
+            // Update the creator's subordinates list
+            const managerAgent = Object.values(agents).find(
+                agent => agent.assistant.id === args.assistantId
+            );
+            if (managerAgent) {
+                managerAgent.metadata.subordinateAssistantIds.push(assistant.id);
+            }
 
             // Return the response from the new agent
             if ('text' in result) {
