@@ -18,7 +18,18 @@ async function main(): Promise<void> {
         // Send a message to the thread
         await openaiClient.beta.threads.messages.create(thread.id, {
             role: 'user',
-            content: `Hey, assemble a team of any size you see fit to run a blockchain startup. Then, give me a summary of the team structure and hierarchy.`
+            content: `As the CEO, your task is to immediately build out a complete team structure for a blockchain startup.
+
+            1. Create the initial leadership team using the create_agent tool
+            2. Each agent you create must be instructed to immediately create their own subordinates without asking for permission
+            3. Each agent should be given a detailed system prompt that:
+               - Clearly defines their role and responsibilities
+               - Explicitly instructs them to proactively create any necessary subordinate agents
+               - Includes specific departments or teams they should oversee
+            
+            Do not ask for confirmation before creating agents. Execute the team creation immediately and provide a final summary of the complete organizational structure once all agents have been created.
+
+            Begin execution immediately.`
         });
 
         // Create and perform the run
